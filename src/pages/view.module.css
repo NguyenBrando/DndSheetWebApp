@@ -1,0 +1,108 @@
+/* Global classes for anywhere on screen */
+.hardBorder {
+    border: 1px solid var(--text);
+    padding: 8px;
+}
+
+.underlined {
+    border-bottom: 1px solid var(--border);
+}
+
+
+/* Class for full viewport */
+.screenContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+    /* Classes for top bar of view screen */
+    .topBar {
+        width: 80%;
+        margin: 2rem auto;
+
+        display: grid;
+        grid-template-columns: 40% 1fr;
+
+        align-items: center;
+    }
+    .topBar > table {
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+    .topBar > table > tbody > tr > th, td {
+        width: 33%;
+        text-align: left;
+        padding: 2px 10px;
+    }
+
+
+    /* Classes for main body information */
+    .bodyContainer {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+    }
+    .bodyContainer > * > * {
+        margin: 8px;
+    }
+        /* Classes for left column of main body */
+        .statsContainer {
+            display: grid;
+            grid-template-columns: 32% 1fr;
+        }
+            /* Classes for ability scores */
+            .abilityScoresContainer > div {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                border: 1px solid var(--text);
+                padding: 8px 0 0 0;
+            }
+            .abilityScoresContainer > div > h2 {
+                padding: 0;
+            }
+            .abilityScoresContainer > div > h3 {
+                border: 1px solid var(--text);
+                border-radius: 100% 100% 0 0;
+                padding: 6px 12px 0px 12px;
+                margin-bottom: -1px;
+            }
+
+            /* Classes for proficiencies */
+            .proficienciesContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+                .stackedListEntry {
+                    display: grid;
+                    grid-template-columns: 20% 1fr;
+                }
+                .stackedListEntry > * {
+                    border: 1px solid var(--border);
+                    padding: 8px 0;
+                }
+
+                .skillsBox {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    border: 1px solid var(--text);
+                    padding: 8px;
+                }
+                .skillsBox > div {
+                    display: flex;
+                    gap: 8px;
+                }
+                .skillsBox > div > h6 > i {
+                    color: var(--text);
+                    font-size-adjust: 0.4;
+                }
+
+
+        /* Classes for center column of main body */
+
+
+
+        /* Classes for right column of main body */
