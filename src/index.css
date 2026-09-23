@@ -29,6 +29,10 @@ html.dark-mode {
   box-sizing: border-box;
 }
 
+html * {
+  accent-color: var(--accent)
+}
+
 html {
   transform: scale(0.85);
   transform-origin: top;
