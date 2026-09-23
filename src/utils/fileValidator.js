@@ -1,19 +1,23 @@
-export const processJSON = (event) => {
-    const file = event.target.files[0];
-    
-    if (!file) return;
+export const processJSON = (file) => {
+    if (!file) return Promise.resolve(null);
 
-    const reader = new FileReader();
-    reader.readAsText(file);
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsText(file);
 
-    reader.onload = (e) => {
-        try {
-            const jsonData = JSON.parse(e.target.result)
-            navigate('/view', {state: {uploadedData: jsonData}})
-        } catch (error) {
-            alert("Invalid JSON file.")
+        reader.onload = (e) => {
+            try {
+                const jsonData = JSON.parse(e.target.result);
+                resolve(jsonData);
+            } catch (error) {
+                alert("Invalid JSON file.")
+                resolve(null);
+            }
+        };
+
+        reader.onerror = () => {
+            alert("Error reading file.");
+            resolve(null);
         }
-    }
-
-    return jsonObj
+    })
 }

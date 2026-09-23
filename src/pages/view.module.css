@@ -18,7 +18,7 @@
     /* Classes for top bar of view screen */
     .topBar {
         width: 80%;
-        margin: 2rem auto;
+        margin: 1.5rem auto 0 auto;
 
         display: grid;
         grid-template-columns: 40% 1fr;
@@ -32,7 +32,7 @@
     .topBar > table > tbody > tr > th, td {
         width: 33%;
         text-align: left;
-        padding: 2px 10px;
+        padding: 3px 12px;
     }
 
 
@@ -41,16 +41,23 @@
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: 1fr;
+        height: 820px;
+        margin: 8px 0;
     }
     .bodyContainer > * > * {
         margin: 8px;
     }
         /* Classes for left column of main body */
-        .statsContainer {
+        .leftContainer {
             display: grid;
             grid-template-columns: 32% 1fr;
         }
             /* Classes for ability scores */
+            .abilityScoresContainer {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
             .abilityScoresContainer > div {
                 display: flex;
                 flex-direction: column;
@@ -60,7 +67,7 @@
                 padding: 8px 0 0 0;
             }
             .abilityScoresContainer > div > h2 {
-                padding: 0;
+                padding: 8px;
             }
             .abilityScoresContainer > div > h3 {
                 border: 1px solid var(--text);
@@ -73,15 +80,15 @@
             .proficienciesContainer {
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
+                justify-content: space-between;
             }
                 .stackedListEntry {
                     display: grid;
                     grid-template-columns: 20% 1fr;
                 }
                 .stackedListEntry > * {
-                    border: 1px solid var(--border);
-                    padding: 8px 0;
+                    border: 1px solid var(--text);
+                    padding: 6px 0;
                 }
 
                 .skillsBox {
@@ -95,6 +102,9 @@
                     display: flex;
                     gap: 8px;
                 }
+                .skillsBox > div > input[type="radio"] {
+                    accent-color: var(--accent)
+                }
                 .skillsBox > div > h6 > i {
                     color: var(--text);
                     font-size-adjust: 0.4;
@@ -102,7 +112,102 @@
 
 
         /* Classes for center column of main body */
+        .centerContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+            .combatStatsContainer {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 1fr;
+            }
+            .combatStatsContainer > div {
+                border: 1px solid var(--text);
+                padding: 20px 0;
+            }
+            .hpStatsContainer {
+                display: grid;
+                grid-template-columns: 60% 1fr;
+                border: 1px solid var(--text);
+                padding: 12px;
+                gap: 16px;
+                align-items: center;
+            }
+            .hpStatsContainer > div {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .hpStatsContainer > div > input {
+                box-sizing: border-box;
+                width: 100%;
+            }
+            .lifeStatsContainer {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 1fr;
+            }
+            .lifeStatsContainer > div {
+                border: 1px solid var(--text);
+            }
+            .lifeStatsContainer > div > div {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 16px 0 8px 0;
+            }
+                .hitDiceContainer > div {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 12px;
+                }
+                .deathSavesContainer > div {
+                    display: flex;
+                }
 
-
+            .equipmentContainer {
+                height: 100%;
+                border: 1px solid var(--text);
+                padding: 8px;
+            }
+            .equipmentContainer > div {
+                overflow-y: auto;
+                scrollbar-width: thin;
+                border: 1px solid var(--border);
+                margin: 8px 0;
+                padding: 8px;
+                text-align: left;
+            }
+            .equipmentContainer > div > div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-bottom: 2px;
+            }
 
         /* Classes for right column of main body */
+        .rightContainer {
+            border: 1px solid var(--text);
+            margin: 8px;
+        }
+            .traitsContainer {
+                overflow-y: auto;
+                scrollbar-width: thin;
+            }
+            .traitsContainer > div {
+                border: 1px solid var(--border);
+                padding: 8px;
+                text-align: left;
+            }
+            .traitsContainer > div > div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-bottom: 2px;
+            }
+            .traitsContainer > div > div > input[type="checkbox"] {
+                content: "*";
+                accent-color: yellow;
+            }

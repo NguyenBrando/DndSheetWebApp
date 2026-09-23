@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+import { ErrorProvider, GlobalErrorBanner } from './components/ErrorDisplay';
+
 import Home from './pages/Home';
-import Create from './pages/Create';
+import NewChar from './pages/NewChar';
+import NewRace from './pages/NewRace';
+import NewClass from './pages/NewClass';
+import NewBG from './pages/NewBG';
 import View from './pages/View';
 
 export default function App() {
-
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'light';
   });
@@ -27,22 +32,29 @@ export default function App() {
 
   return (
     <Router>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/create">New Character</a>
-        <a href="/create">New Race</a>
-        <a href="/create">New Class</a>
-        <a href="/create">New Background</a>
-        <button onClick={toggleTheme}>Switch to {theme == 'light' ? 'dark' : 'light'} mode</button>
-      </nav>
+      <ErrorProvider>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/new_character">New Character</a>
+          <a href="/new_race">New Race</a>
+          <a href="/new_class">New Class</a>
+          <a href="/new_background">New Background</a>
+          <button onClick={toggleTheme}>Switch to {theme == 'light' ? 'dark' : 'light'} mode</button>
+        </nav>
 
-      <main style={{ padding: '1rem' }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/view" element={<View />} />
-        </Routes>
-      </main>
+        <GlobalErrorBanner/>
+
+        <main style={{ padding: '1rem' }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/new_character" element={<NewChar />} />
+            <Route path="/new_race" element={<NewRace />} />
+            <Route path="/new_class" element={<NewClass />} />
+            <Route path="/new_background" element={<NewBG />} />
+            <Route path="/view" element={<View />} />
+          </Routes>
+        </main>
+      </ErrorProvider>
     </Router>
   );
 }

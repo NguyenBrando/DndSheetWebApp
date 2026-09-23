@@ -4,12 +4,12 @@
     "type": "Humanoid",
     "size": "Medium",
     "speed": 30,
-    "languages": ["Common", "Option"],
+    "languages": ["Common", null],
     "traits": [
         {
             "name": "Ability Score Increase", 
             "type": "static",
-            "options": ["Option", "Option", "Option"]
+            "options": [null, null, null]
         },
         {
             "name": "Adrenaline Rush", 

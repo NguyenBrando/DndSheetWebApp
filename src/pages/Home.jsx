@@ -1,17 +1,25 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useError } from '../components/ErrorDisplay';
 import { processJSON } from '../utils/fileValidator'
 
 export default function Home() {
     const navigate = useNavigate();
 
-    const handleCharacterFile = (event) => {
-        
+    const { showError } = useError();
+
+    const handleCharacterFile = async (event) => {
+        const file = event.target.files[0];
+        const jsonData = await processJSON(file);
+
+        if (jsonData == null) return;
+
+        navigate('/view', {state: {uploadedData: jsonData}});
     }
 
     return (
         <div>
             <h1> Home </h1>
-            <a href="/create">Create New Character</a>
+            <a href="/new_character">Create New Character</a>
 
             <h5>Upload Character JSON</h5>
             <input type="file" accept=".json" onChange={handleCharacterFile}></input>
