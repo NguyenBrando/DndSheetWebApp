@@ -1,0 +1,32 @@
+{
+    "id": "character",
+    "name": "The Minimizer",
+    "level": 1,
+    "stats": {
+        "strength": 10,
+        "dexterity": 10,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 10
+    },
+    "race": {
+        "id": "race",
+        "name": "Orc",
+        "type": "Humanoid",
+        "size": "Medium",
+        "speed": 30,
+        "traits": []
+    },
+    "background": {
+        "id": "background",
+        "name": "Adventurer",
+        "traits": []
+    },
+    "class": {
+        "id": "class",
+        "name": "Druid",
+        "hitDice": 8,
+        "traits": []
+    }
+}
