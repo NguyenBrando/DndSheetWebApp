@@ -1,3 +1,4 @@
+import { modFormat } from "../../utils/formatter"
 import CharacterEquipmentList from "./ViewEquipmentContainer"
 
 function CharacterCombatColumn({ displayData }) {
@@ -21,7 +22,7 @@ function CharacterCombatColumn({ displayData }) {
                     
                     .hpStatsContainer {
                         display: grid;
-                        grid-template-columns: 60% 1fr;
+                        grid-template-columns: 50% 1fr;
                         border: 1px solid var(--text);
                         padding: 14px;
                         gap: 16px;
@@ -32,12 +33,16 @@ function CharacterCombatColumn({ displayData }) {
                         flex-direction: column;
                         gap: 4px;
                     }
+                    .hpStatsContainer > div > div {
+                        display: flex;
+                        gap: 2px;
+                    }
                     .hpStatsContainer h2 {
                         border-bottom: 1px solid var(--border);
                     }
                     .hpStatsContainer input {
                         box-sizing: border-box;
-                        width: 100%;
+                        width: 50%;
                     }
                     
                     .lifeStatsContainer {
@@ -70,28 +75,32 @@ function CharacterCombatColumn({ displayData }) {
 
             <div className="combatStatsContainer">
                 <div>
-                    <h2>{Number(displayData.stats.dexterity.mod)+ 10}</h2>
+                    <h2>{displayData.armorClass}</h2>
                     <h6>Armor Class</h6>
                 </div>
                 <div>
-                    <h2>{displayData.stats.dexterity.mod}</h2>
+                    <h2>{modFormat(displayData.initiative)}</h2>
                     <h6>Initiative</h6>
                 </div>
                 <div>
-                    <h2>{displayData.race.speed}ft</h2>
+                    <h2>{displayData.speed}ft</h2>
                     <h6>Speed</h6>
                 </div>
             </div>
 
             <div className="hpStatsContainer">
                 <div>
-                    <h2>100 HP</h2>
-                    <h3>100 MAX HP</h3>
+                    <h2>{displayData.health?.current} HP</h2>
+                    <h3>{displayData.health?.max} MAX HP</h3>
                 </div>
                 <div>
-                    <h3>+0 TEMP HP</h3>
-                    <input type="number" defaultValue={0}/>
-                    <button>Apply Damage</button>
+                    <h3>/ +{displayData.health?.temp} TEMP HP</h3>
+                    <div>
+                        <input type="number" defaultValue={0}/>
+                        <button>-</button> 
+                        <button>+</button>
+                        <button>/+</button>
+                    </div>
                 </div>
             </div>
 
@@ -100,11 +109,11 @@ function CharacterCombatColumn({ displayData }) {
                     <div className="hitDiceContainer">
                         <div>
                             <button>-</button>
-                            <h3>1 d8</h3>
+                            <h3>{displayData.hitDice?.current} d{displayData.hitDice?.type}</h3>
                             <button>+</button>
                         </div>
                         <div>
-                            <h4>{displayData.level} d8 Total</h4>
+                            <h4>{displayData.hitDice?.max} d{displayData.hitDice?.type} Total</h4>
                         </div>
                     </div>
                     <h3>Hit Dice</h3>

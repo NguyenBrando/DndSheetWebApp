@@ -32,14 +32,12 @@ class AbilityMod extends BaseTrait {
     apply(character) {
         for (const option of this.definites) {
             if (abilityScores.includes(option)) {
-                console.log(character.stats[option])
                 character.stats[option].value = applyOperator(character.stats[option].value, this.operator, this.value);
                 character.stats[option].ops.push(`${this.operator} ${this.value} (${character.race.name})`)
             }
         };
         for (const option of this.options) {
             if (abilityScores.includes(option)) {
-                console.log(character.stats[option])
                 character.stats[option].value = applyOperator(character.stats[option].value, this.operator, this.value);
                 character.stats[option].ops.push(`${this.operator} ${this.value} (${character.race.name})`)
             }

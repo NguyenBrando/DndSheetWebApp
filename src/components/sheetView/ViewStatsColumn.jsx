@@ -1,4 +1,4 @@
-import { capitalFirst } from "../../utils/formatter"
+import { capitalFirst, modFormat } from "../../utils/formatter"
 import { abilityScores, skills } from "../../utils/statLists"
 
 function CharacterStatsColumn({ displayData }) {
@@ -65,11 +65,11 @@ function CharacterStatsColumn({ displayData }) {
 
 
             <div className="abilityScoresContainer">
-                {abilityScores.map((ability) => (
-                    <div key={ability} title={displayData.stats[ability].ops.join('\n')}>
+                {abilityScores.map((ability) => ( 
+                    <div key={ability} title={displayData.stats?.[ability].ops.join('\n')}>
                         <h6>{capitalFirst(ability)}</h6>
-                        <h2>{displayData.stats[ability].value}</h2>
-                        <h3>{displayData.stats[ability].mod}</h3>
+                        <h2>{displayData.stats?.[ability].value}</h2>
+                        <h3>{modFormat(displayData.stats?.[ability].mod)}</h3>
                     </div>
                 ))}
             </div>
@@ -79,14 +79,14 @@ function CharacterStatsColumn({ displayData }) {
                     <h3>0</h3><h6>Inspiration Points</h6>
                 </div>
                 <div className="stackedListEntry">
-                    <h3>{displayData.profBonus}</h3> <h6>Proficiency Bonus</h6>
+                    <h3>{modFormat(displayData.profBonus)}</h3> <h6>Proficiency Bonus</h6>
                 </div>
 
                 <div className="skillsBox">
                     {abilityScores.map((ability) => (
                         <div key={ability}>
-                            <input type='radio' checked={displayData.savingThrows[ability].prof == 1} disabled={displayData.savingThrows[ability].prof != 1}/>
-                            <h4>{displayData.savingThrows[ability].mod}</h4>
+                            <input type='radio' checked={displayData.savingThrows?.[ability].prof == 1} disabled={displayData.savingThrows?.[ability].prof != 1}/>
+                            <h4>{modFormat(displayData.savingThrows?.[ability].mod)}</h4>
                             <h6>{capitalFirst(ability)}</h6>
                         </div>
                     ))}
@@ -96,8 +96,8 @@ function CharacterStatsColumn({ displayData }) {
                 <div className="skillsBox">
                     {Object.entries(skills).map(([skill, ability]) => (
                         <div key={skill}>
-                            <input type='radio' checked={displayData.savingThrows[ability].prof == 1} disabled={displayData.savingThrows[ability].prof != 1}/>
-                            <h4>{displayData.skills[skill].mod}</h4>
+                            <input type='radio' checked={displayData.skills?.[skill].prof == 1} disabled={displayData.skills?.[skill].prof != 1}/>
+                            <h4>{modFormat(displayData.skills?.[skill].mod)}</h4>
                             <h6>{capitalFirst(skill)} <i>({capitalFirst(ability.slice(0,3))})</i></h6>
                         </div>
                     ))}

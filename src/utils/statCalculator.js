@@ -1,11 +1,9 @@
-import { statFormat } from "./formatter";
-
 export const calcProf = (level) => {
-    return statFormat(Math.ceil(level / 4) + 1)
+    return Math.ceil(level / 4) + 1;
 }
 
 export const calcAbilityMod = (abilityScore) => {
-    return statFormat(Math.floor(abilityScore / 2) - 5);
+    return Math.floor(abilityScore / 2) - 5;
 }
 
 export const applyOperator = (x, operator, y) => {
@@ -15,4 +13,8 @@ export const applyOperator = (x, operator, y) => {
         case '-':
             return x - y;
     }
+}
+
+export const clamp = (val, min, max) => {
+    return Math.min(Math.max(val, min), max);
 }
