@@ -32,7 +32,7 @@ function CharacterTraitsColumn({ displayData }) {
             
             <h3>Traits List</h3>
             <div className="traitsContainer">
-                {displayData.traits.map((trait) => (
+                {displayData.traits?.map((trait) => (
                     <div key={trait.name}>
                         <div>
                             <h6>{trait.name}</h6>

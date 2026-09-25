@@ -5,8 +5,6 @@ import { processJSON } from '../utils/fileValidator'
 export default function Home() {
     const navigate = useNavigate();
 
-    const { showError } = useError();
-
     const handleCharacterFile = async (event) => {
         const file = event.target.files[0];
         const jsonData = await processJSON(file);
