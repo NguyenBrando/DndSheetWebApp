@@ -1,7 +1,46 @@
+import { useState } from "react"
 import { modFormat } from "../../utils/formatter"
+import { clamp } from "../../utils/statCalculator"
 import CharacterEquipmentList from "./ViewEquipmentContainer"
 
-function CharacterCombatColumn({ displayData }) {
+function CharacterCombatColumn({ displayData, updateData }) {
+    const [ healthMod, setHealthMod ] = useState(0)
+
+    function adjustHp(event) { updateData(draft => { 
+        if (!Object.hasOwn(draft,"health")) draft.health = {}
+
+        const currentHealth = draft.health.current ?? 0;
+        const tempHealth = draft.health.temp ?? 0;  
+
+        const maxHealth = displayData.health.max;
+        const adjustment = Number(healthMod ?? 0)
+        
+        switch (event.target.value) {
+            case "heal":
+                draft.health.current = Math.min(currentHealth + adjustment, maxHealth);
+                break;
+            case "damage":
+                if (tempHealth == 0) draft.health.current = Math.max(currentHealth - adjustment, 0);
+                else if (tempHealth > 0) { 
+                    draft.health.temp = tempHealth - adjustment;
+                    if (draft.health.temp < 0) {
+                        draft.health.current = Math.max(currentHealth - draft.health.temp, 0);
+                        draft.health.temp = 0;
+                    }
+                }
+                break;
+            case "temp":
+                draft.health.temp = tempHealth + adjustment; 
+                break;
+        }
+    })}
+
+    function updateHitDice(event) { 
+        updateData(draft => {
+            draft.hitDice = clamp((draft.hitDice ?? draft.level) + Number(event.target.value), 0, draft.level)
+        })
+    }
+
     return (
         <div className="centerContainer">
             <style>{`
@@ -96,10 +135,10 @@ function CharacterCombatColumn({ displayData }) {
                 <div>
                     <h3>/ +{displayData.health?.temp} TEMP HP</h3>
                     <div>
-                        <input type="number" defaultValue={0}/>
-                        <button>-</button> 
-                        <button>+</button>
-                        <button>/+</button>
+                        <input type="number" defaultValue={0} min="0" onChange={(e)=>setHealthMod(e.target.value)}/>
+                        <button value="damage" onClick={adjustHp}>-</button> 
+                        <button value="heal" onClick={adjustHp}>+</button>
+                        <button value="temp" onClick={adjustHp}>/+</button>
                     </div>
                 </div>
             </div>
@@ -108,9 +147,9 @@ function CharacterCombatColumn({ displayData }) {
                 <div>
                     <div className="hitDiceContainer">
                         <div>
-                            <button>-</button>
+                            <button value='-1' onClick={updateHitDice}>-</button>
                             <h3>{displayData.hitDice?.current} d{displayData.hitDice?.type}</h3>
-                            <button>+</button>
+                            <button value='1' onClick={updateHitDice}>+</button>
                         </div>
                         <div>
                             <h4>{displayData.hitDice?.max} d{displayData.hitDice?.type} Total</h4>

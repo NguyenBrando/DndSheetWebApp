@@ -13,7 +13,7 @@
         "charisma": 10
     },
     "race": {
-        "id": "Race",
+        "id": "race",
         "name": "Orc",
         "type": "Humanoid",
         "size": "Medium",
@@ -34,7 +34,7 @@
                 "value": 1,
                 "operator": "+",
                 "definites": [],
-                "options": ["strength", null, null],
+                "options": ["strength", "strength", null],
                 "optionType": "ability"
             },
             {
