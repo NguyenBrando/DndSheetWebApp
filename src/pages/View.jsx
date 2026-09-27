@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useImmer } from "use-immer";
+import { useError } from "../components/ErrorDisplay";
 
 import CharacterTopBar from '../components/sheetView/ViewTopBar'
 import CharacterStatsColumn from "../components/sheetView/ViewStatsColumn";
@@ -8,12 +10,11 @@ import CharacterTraitsColumn from "../components/sheetView/ViewTraitsColumn";
 
 import { processCharacterData } from "../models/character"
 import { processJSON } from "../utils/fileValidator";
-import { useError } from "../components/ErrorDisplay";
 
 export default function View() {
     const { showError, clearError } = useError();
     const location = useLocation();
-    const [rawData, setData] = useState(location.state.uploadedData);
+    const [rawData, updateData] = useImmer(location.state.uploadedData);
 
     var displayData = processCharacterData(rawData);
 
@@ -22,15 +23,6 @@ export default function View() {
         if (displayData.sourceData.id !== "character")
             showError("'id' field must be 'character'");
     }, [displayData.sourceData.id]);
-
-    const updateData = (key, val) => {
-        setData(
-            prev => ({
-                ...prev,
-                [key]: val
-            })
-        )
-    }
 
     const importNew = async (event) => {
         const file = event.target.files[0];
@@ -117,9 +109,9 @@ export default function View() {
                     <div className="bodyContainer">
                         <CharacterStatsColumn displayData={displayData}/>
 
-                        <CharacterCombatColumn displayData={displayData}/>
+                        <CharacterCombatColumn displayData={displayData} updateData={updateData}/>
 
-                        <CharacterTraitsColumn displayData={displayData}/>                
+                        <CharacterTraitsColumn displayData={displayData} updateData={updateData}/>                
                     </div>
 
                     <div className="bodyContainer">

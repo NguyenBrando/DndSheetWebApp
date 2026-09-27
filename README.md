@@ -5,6 +5,7 @@ Web app for managing dnd character sheets
 
 <details>
     <summary>Character JSON Ref</summary>
+
     {
         "id": "character" // Required
 
@@ -37,6 +38,7 @@ Web app for managing dnd character sheets
             "failures": // Integer 1-3
         }
     }
+
 </details>
 
 <details>

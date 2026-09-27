@@ -29,6 +29,9 @@ class CharacterDisplayData {
         this.deathSaves = data.deathSaves;
         this.equipment = data.equipment;
 
+        /* Other */
+        this.languages = []
+
         /* Extract complex component data */
         this.traits = []
         this.apply_race(data.race);
@@ -39,10 +42,10 @@ class CharacterDisplayData {
         this.sourceData = data
 
         /* Apply static traits */
-        for (trait of this.traits) 
+        for (const trait of this.traits) 
             if (trait.usage == "static")    
                 trait.apply(this);
-
+        
         /* Run final stat calculations */
         this.run_calculations();
     };
@@ -58,9 +61,9 @@ class CharacterDisplayData {
         this.creatureType = race.type;
         this.size = race.size;
         this.speed = race.speed;
-
-        for (trait of race.traits) {
-            this.traits.push(traitFactory(trait))
+        
+        for (const [index,trait] of race.traits.entries()) {
+            this.traits.push(traitFactory({...trait, id: index, source: "race" }))
         }
     };
 
@@ -73,8 +76,8 @@ class CharacterDisplayData {
         
         this.bg = bg.name;
 
-        for (trait of bg.traits) {
-            this.traits.push(traitFactory(trait))
+        for (const trait of bg.traits) {
+            this.traits.push(traitFactory({...trait, source: "class"}));
         }
     };
 
@@ -86,9 +89,10 @@ class CharacterDisplayData {
         }
         
         this.class = char_class.name;
+        this.hitDice.type = char_class.hitDice;
 
-        for (trait of char_class.traits) {
-            this.traits.push(traitFactory(trait))
+        for (const trait of char_class.traits) {
+            this.traits.push(traitFactory({...trait, source: "background"}))
         }
     };
 

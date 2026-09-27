@@ -11,11 +11,13 @@ export const traitFactory = (jsonTrait) => {
 
 class BaseTrait {
     constructor(data) {
+        this.id = data.id;
         this.name = data.name;
         this.type = data.type;
         this.desc = data.desc;
         this.usage = data.usage;
         this.source = data.source;
+        this.favorite = data.favorite;
 
         this.value = data.value;
         this.operator = data.operator;
@@ -45,7 +47,15 @@ class AbilityMod extends BaseTrait {
     };
 }
 
+class Language extends BaseTrait {
+    apply(character) {
+        this.definites.map((language) => character.languages.push(language));
+        this.options.map((language) => character.languages.push(language));
+    }
+}
+
 
 const TraitRegistry = {
-    "abilityMod": AbilityMod
+    "abilityMod": AbilityMod,
+    "language": Language
 }
