@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { useError } from "../components/ErrorDisplay";
 
@@ -8,31 +8,55 @@ import CharacterStatsColumn from "../components/sheetView/ViewStatsColumn";
 import CharacterCombatColumn from "../components/sheetView/ViewCombatColumn";
 import CharacterTraitsColumn from "../components/sheetView/ViewTraitsColumn";
 
+import EditView from '../components/editView/EditView'
+
 import { processCharacterData } from "../models/character"
 import { processJSON } from "../utils/fileValidator";
+import { formatDate } from "../utils/formatter";
 
 export default function View() {
     const { showError, clearError } = useError();
     const location = useLocation();
-    const [rawData, updateData] = useImmer(location.state.uploadedData);
+    const [rawData, updateData] = useImmer({});
+    const [isEditing, setIsEditing] = useState(false);
 
     var displayData = processCharacterData(rawData);
 
+    /* Use uploaded data if available */
+    useEffect(() => {
+        if (location.state?.uploadedData) updateData(location.state.uploadedData);
+    }, [location]);
+
+    /* Enforce data consistency */
     useEffect(() => {
         clearError()
         if (displayData.sourceData.id !== "character")
             showError("'id' field must be 'character'");
     }, [displayData.sourceData.id]);
 
+	/* Export reminder */
+	useEffect(() => {
+		const handleBeforeUnload = (event) => {
+			event.preventDefault();
+			event.returnValue = ''; 
+		};
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, []);
+
+    /* Import file */
     const importNew = async (event) => {
         const file = event.target.files[0];
         const jsonData = await processJSON(file);
 
         if (jsonData == null) return;
 
-        setData(jsonData)
+        updateData(jsonData)
     }
 
+    /* Export file */
     const exportData = () => {
         try {
             const jsonData = JSON.stringify(rawData, null, 2)
@@ -42,7 +66,7 @@ export default function View() {
             
             const link = document.createElement('a');
             link.href = url;
-            link.download = `export_data_${Date.now()}.json`; 
+            link.download = `export_data_${formatDate(Date.now())}.json`; 
             
             document.body.appendChild(link);
             link.click();
@@ -100,26 +124,30 @@ export default function View() {
                 </div>
             </div>
 
-            <button>Toggle Edit</button>
+            <button onClick={() => setIsEditing(!isEditing)}>Toggle Edit {isEditing ? "Off" : "On"}</button>
 
             {displayData.sourceData.id !== "character" ? null : (
-                <div>
-                    <CharacterTopBar displayData={displayData} />
+                isEditing ? (
+                    <EditView rawData={rawData} updateData={updateData}/>
+                ) : (
+                    <div>
+                        <CharacterTopBar displayData={displayData} />
 
-                    <div className="bodyContainer">
-                        <CharacterStatsColumn displayData={displayData}/>
+                        <div className="bodyContainer">
+                            <CharacterStatsColumn displayData={displayData} updateData={updateData}/>
 
-                        <CharacterCombatColumn displayData={displayData} updateData={updateData}/>
+                            <CharacterCombatColumn displayData={displayData} updateData={updateData}/>
 
-                        <CharacterTraitsColumn displayData={displayData} updateData={updateData}/>                
+                            <CharacterTraitsColumn displayData={displayData} updateData={updateData}/>                
+                        </div>
+
+                        <div className="bodyContainer">
+                            <h1>Column 1</h1>
+                            <h1>Column 2</h1>
+                            <h1>Column 3</h1>
+                        </div>
                     </div>
-
-                    <div className="bodyContainer">
-                        <h1>Column 1</h1>
-                        <h1>Column 2</h1>
-                        <h1>Column 3</h1>
-                    </div>
-                </div>
+                )
             )}
             
         </div>

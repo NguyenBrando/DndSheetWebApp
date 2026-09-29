@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useError } from "../components/ErrorDisplay";
-import { validateCharacterData } from "../utils/characterValidator";
 
 
 export default function Create() {
@@ -13,13 +12,6 @@ export default function Create() {
         const formValues = Object.fromEntries(formData.entries());
 
         formValues["id"] = "character"
-        const validatedData = validateCharacterData(formValues);
-
-        if (validatedData instanceof Error) {
-            showError(validatedData.message);
-            return;
-        }
-
         navigate('/view', {state: {uploadedData: formValues}});
     }
 

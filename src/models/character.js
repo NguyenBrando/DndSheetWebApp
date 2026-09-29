@@ -52,10 +52,7 @@ class CharacterDisplayData {
 
     /* Deconstruct race object */
     apply_race(race) {
-        if (race === undefined || race.id != "race") {
-            this.race = {};
-            return;
-        }
+        if (race === undefined || race.id != "race") return;
         
         this.race = race.name;
         this.creatureType = race.type;
@@ -68,25 +65,19 @@ class CharacterDisplayData {
     };
 
     /* Deconstruct background object */
-    apply_background(bg) {
-        if (bg === undefined || bg.id != "race") {
-            this.background = {};
-            return;
-        }
+    apply_background(background) {
+        if (background === undefined || background.id != "background") return;
         
-        this.bg = bg.name;
+        this.background = background.name;
 
-        for (const trait of bg.traits) {
+        for (const trait of background.traits) {
             this.traits.push(traitFactory({...trait, source: "class"}));
         }
     };
 
     /* Deconstruct class object */
     apply_class(char_class) {
-        if (char_class === undefined || char_class.id != "class") {
-            this.class = {};
-            return;
-        }
+        if (char_class === undefined || char_class.id != "class") return;
         
         this.class = char_class.name;
         this.hitDice.type = char_class.hitDice;
@@ -117,7 +108,7 @@ class CharacterDisplayData {
         this.initiative = this.stats.dexterity.mod
 
         /* HP */
-        const relavantHpRolls = this.health.rolls?.slice(0,this.level) ?? [];
+        const relavantHpRolls = this.health.rolls?.slice(0,this.level-1) ?? [];
         this.health.max = (
             (this.hitDice?.type ?? 0) + 
             (relavantHpRolls.reduce((accumulative, currVal) => accumulative + clamp(currVal,1,(this.hitDice?.type ?? 0)), 0)) + 

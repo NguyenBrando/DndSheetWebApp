@@ -34,22 +34,22 @@ function CharacterTopBar({ displayData }) {
             <table>
                 <tbody>
                     <tr>
-                        <td><h3>{displayData.class?.name}</h3></td>
-                        <td><h3>{displayData.level}</h3></td>
-                        <td><h3>{displayData.background?.name}</h3></td>
+                        <td><h3>{displayData.class}</h3></td>
+                        <td><h3>{displayData.race}</h3></td>
+                        <td><h3>{displayData.background}</h3></td>
                     </tr>
                     <tr>
                         <th><h6>Class:</h6></th>
-                        <th><h6>Level:</h6></th>
+                        <th><h6>Race:</h6></th>
                         <th><h6>Background:</h6></th>
                     </tr>
                     <tr>
-                        <td><h3>{displayData.race?.name}</h3></td>
+                        <td><h3>{displayData.level}</h3></td>
                         <td><h3>{displayData.alignment}</h3></td>
                         <td><h3>{displayData.playerName}</h3></td>
                     </tr>
                     <tr>
-                        <th><h6>Race:</h6></th>
+                        <th><h6>Level:</h6></th>
                         <th><h6>Alignment:</h6></th>
                         <th><h6>Player Name:</h6></th>
                     </tr>
