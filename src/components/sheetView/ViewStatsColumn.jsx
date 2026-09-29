@@ -1,7 +1,12 @@
 import { capitalFirst, modFormat } from "../../utils/formatter"
 import { abilityScores, skills } from "../../utils/statLists"
 
-function CharacterStatsColumn({ displayData }) {
+function CharacterStatsColumn({ displayData, updateData }) { 
+    /* Toggle Inspiration point on/off */
+    function toggleInspiration(value) {updateData(draft => {
+        draft.inspiration = Number(value) == 0 ? 1 : 0;
+    })}
+
     return (
         <div className="leftContainer">
             <style>{`
@@ -76,7 +81,7 @@ function CharacterStatsColumn({ displayData }) {
 
             <div className="proficienciesContainer">
                 <div className="stackedListEntry">
-                    <h3>0</h3><h6>Inspiration Points</h6>
+                    <h3 onClick={(e) => toggleInspiration(e.target.innerText)}>{displayData.inspiration}</h3><h6>Inspiration Points</h6>
                 </div>
                 <div className="stackedListEntry">
                     <h3>{modFormat(displayData.profBonus)}</h3> <h6>Proficiency Bonus</h6>

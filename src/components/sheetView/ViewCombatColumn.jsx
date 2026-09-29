@@ -24,13 +24,13 @@ function CharacterCombatColumn({ displayData, updateData }) {
                 else if (tempHealth > 0) { 
                     draft.health.temp = tempHealth - adjustment;
                     if (draft.health.temp < 0) {
-                        draft.health.current = Math.max(currentHealth - draft.health.temp, 0);
+                        draft.health.current = Math.max(currentHealth + draft.health.temp, 0);
                         draft.health.temp = 0;
                     }
                 }
                 break;
             case "temp":
-                draft.health.temp = tempHealth + adjustment; 
+                draft.health.temp = adjustment; 
                 break;
         }
     })}
@@ -138,7 +138,7 @@ function CharacterCombatColumn({ displayData, updateData }) {
                         <input type="number" defaultValue={0} min="0" onChange={(e)=>setHealthMod(e.target.value)}/>
                         <button value="damage" onClick={adjustHp}>-</button> 
                         <button value="heal" onClick={adjustHp}>+</button>
-                        <button value="temp" onClick={adjustHp}>/+</button>
+                        <button value="temp" onClick={adjustHp}>/+=</button>
                     </div>
                 </div>
             </div>
