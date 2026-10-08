@@ -129,11 +129,11 @@ function CharacterCombatColumn({ displayData, updateData }) {
 
             <div className="hpStatsContainer">
                 <div>
-                    <h2>{displayData.health?.current} HP</h2>
-                    <h3>{displayData.health?.max} MAX HP</h3>
+                    <h2>{displayData.hp?.current} HP</h2>
+                    <h3 title={displayData.hp?.ops.join('\n')}> {displayData.hp?.max} MAX HP </h3>
                 </div>
                 <div>
-                    <h3>/ +{displayData.health?.temp} TEMP HP</h3>
+                    <h3>/ +{displayData.hp?.temp} TEMP HP</h3>
                     <div>
                         <input type="number" defaultValue={0} min="0" onChange={(e)=>setHealthMod(e.target.value)}/>
                         <button value="damage" onClick={adjustHp}>-</button> 

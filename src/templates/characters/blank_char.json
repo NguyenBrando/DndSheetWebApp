@@ -20,44 +20,50 @@
         "speed": 30,
         "traits": [
             {
-                "name": "Languages", 
-                "type": "language",
-                "usage": "static",
-                "definites": ["common"],
-                "options": [null],
-                "optionType": "language"
+                "name": "Ability Score Increase",
+                "desc": "When determining your character’s ability scores, increase one score by 2 and increase a different score by 1, or increase three different scores by 1. You can't raise any of your scores above 20.",
+                "type": "abilityMod",
+                "effects": [
+                    { "mode": "choice", "target": "strength", "value": 1 },
+                    { "mode": "choice", "target": "strength", "value": 1 },
+                    { "mode": "choice", "target": null, "value": 1 }
+                ]
             },
             {
-                "name": "Ability Score Increase", 
-                "type": "abilityMod",
-                "usage": "static",
-                "value": 1,
-                "operator": "+",
-                "definites": [],
-                "options": ["strength", "strength", null],
-                "optionType": "ability"
+                "name": "Languages",
+                "type": "proficiency",
+                "effects": [
+                    { "mode": "definite", "category": "language", "value": "common" },
+                    { "mode": "choice", "category": "language", "value": null }
+                ]
             },
             {
                 "name": "Adrenaline Rush", 
-                "usage": "active", 
-                "charges": 0,
-                "desc": "You can take the Dash action as a bonus action. You can use this trait a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest. Whenever you use this trait, you gain a number of temporary hit points equal to your proficiency bonus."
+                "desc": "You can take the Dash action as a bonus action. You can use this trait a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest. Whenever you use this trait, you gain a number of temporary hit points equal to your proficiency bonus.",
+                "type": "active",
+                "resource": {
+                    "max_charges": "@proficiency",
+                    "reset_on": "long_rest"
+                }
             },
             {
                 "name": "Darkvision",
-                "usage": "passive",
-                "desc": "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You discern colors in that darkness only as shades of gray."
+                "desc": "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You discern colors in that darkness only as shades of gray.",
+                "type": "passive"
             },
             {
                 "name": "Powerful Build",
-                "usage": "passive",
-                "desc": "You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift."
+                "desc": "You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift.",
+                "type": "passive"
             },
             {
                 "name": "Relentless Endurance",
-                "usage": "passive",
-                "charges": 1,
-                "desc": "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. Once you use this trait, you can’t do so again until you finish a long rest."
+                "desc": "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. Once you use this trait, you can’t do so again until you finish a long rest.",
+                "type": "passive",
+                "resource": {
+                    "max_charges": 1,
+                    "reset_on": "long_rest"
+                }
             }
         ]
     },

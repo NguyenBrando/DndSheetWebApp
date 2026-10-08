@@ -1,61 +1,31 @@
 import { applyOperator } from "../utils/statCalculator";
 import { abilityScores } from "../utils/statLists";
+import { effectFactory } from "./effect";
 
 
 export const traitFactory = (jsonTrait) => {
-    const TraitClass = TraitRegistry[jsonTrait.type];
-    if (!TraitClass) return new BaseTrait(jsonTrait);
-    return new TraitClass(jsonTrait);
+    return new BaseTrait(jsonTrait);
 }
 
 
-class BaseTrait {
-    constructor(data) {
-        this.id = data.id;
+export class BaseTrait {
+    constructor(id, source, data) {
+        this.id = id;
+        this.source = source;
+
         this.name = data.name;
-        this.type = data.type;
         this.desc = data.desc;
-        this.usage = data.usage;
-        this.source = data.source;
+        this.type = data.type;
+        this.level = data.level ?? 0;
         this.favorite = data.favorite;
+        this.resource = data.resource;
 
-        this.value = data.value;
-        this.operator = data.operator;
-        this.definites = data.definites;
-        this.options = data.options;
+        this.effects = []
+        data.effects?.forEach((effect, index) => this.effects.push(effectFactory(data.type, index, this.source, effect)));
     };
 
     apply(character) {
-        return
+        this.effects.map(effect => effect.apply(character))
     };
 }
 
-class AbilityMod extends BaseTrait {
-    apply(character) {
-        for (const option of this.definites) {
-            if (abilityScores.includes(option)) {
-                character.stats[option].value = applyOperator(character.stats[option].value, this.operator, this.value);
-                character.stats[option].ops.push(`${this.operator} ${this.value} (${character.race.name})`)
-            }
-        };
-        for (const option of this.options) {
-            if (abilityScores.includes(option)) {
-                character.stats[option].value = applyOperator(character.stats[option].value, this.operator, this.value);
-                character.stats[option].ops.push(`${this.operator} ${this.value} (${character.race.name})`)
-            }
-        };
-    };
-}
-
-class Language extends BaseTrait {
-    apply(character) {
-        this.definites.map((language) => character.languages.push(language));
-        this.options.map((language) => character.languages.push(language));
-    }
-}
-
-
-const TraitRegistry = {
-    "abilityMod": AbilityMod,
-    "language": Language
-}
