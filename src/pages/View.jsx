@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { useError } from "../components/ErrorDisplay";
@@ -21,7 +21,7 @@ export default function View() {
     const [isEditing, setIsEditing] = useState(false);
 
     var displayData = processCharacterData(rawData);
-
+    
     /* Use uploaded data if available */
     useEffect(() => {
         if (location.state?.uploadedData) updateData(location.state.uploadedData);
@@ -53,6 +53,7 @@ export default function View() {
 
         if (jsonData == null) return;
 
+        setIsEditing(false);
         updateData(jsonData)
     }
 

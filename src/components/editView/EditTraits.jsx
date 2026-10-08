@@ -3,42 +3,21 @@ import { useEffect, useState } from "react";
 import { capitalFirst } from "../../utils/formatter";
 
 
-function CharacterTraitsColumn({ displayData, updateData }) {
-    const [ sorting, setSorting ] = useState({sortBy:"type", order:1});
+function EditTraitsColumn({ rawData, updateData }) {
+    const [ sorting, setSorting ] = useState({sortBy:"usage", order:1});
 
     function updateSorting(field, value) { setSorting({...sorting, [field]:value}) };
 
-    const addFavorite = (event) => {
-        const isFavorite = event.target.checked;
-        const trait = JSON.parse(event.target.value);
-        updateData(
-            draft => {
-                draft[trait.source].traits[trait.id].favorite = isFavorite
-            }
-        )
-    }
-
-    const updateCharge = (trait) => {
-        updateData(
-            draft => {
-                draft[trait.source].traits[trait.id].resource.curr_charges = ((draft[trait.source].traits[trait.id].resource.curr_charges ?? 0) + 1) % (1 + displayData.get_stat(draft[trait.source].traits[trait.id].resource.max_charges));
-            }
-        )
-    }
-
-    const organizeTraits = (character) => {
-        const filteredTraits = [...character.traits].filter(trait =>
-            (trait.type == "passive" || trait.type == "active") &&
-            (trait.level ?? 1) <= (character.level ?? 1)
+    const getChoiceTraits = () => {
+        const traits = [
+            ...(rawData.race?.traits ?? []), 
+            ...(rawData.class?.traits ?? []), 
+            ...(rawData.background?.traits ?? [])
+        ];
+        const filteredTraits = [...traits].filter(trait =>
+            trait.effects?.some(effect => effect.mode == "choice") ?? false
         );
-        const sortedTraits = [...filteredTraits].sort((a,b) => {
-            return (
-                ((b.favorite ? 1:0) - (a.favorite ? 1:0)) || 
-                (a[sorting.sortBy].toString().localeCompare(b[sorting.sortBy].toString(), undefined, { numeric: true }) * sorting.order) ||
-                (a.name.localeCompare(b.name))
-            );
-        });
-        return sortedTraits;
+        return filteredTraits;
     }
 
     return (
@@ -81,8 +60,7 @@ function CharacterTraitsColumn({ displayData, updateData }) {
             
             <div className="traitHeader">
                 <select value={sorting.sortBy} onChange={(e) => updateSorting("sortBy",e.target.value)}>
-                    <option value="type">Trait Type</option>
-                    <option value="level">Trait Level</option>
+                    <option value="usage">Usage Type</option>
                     <option value="source">Trait Source</option>
                 </select>
                 <h3>Traits List</h3>
@@ -92,19 +70,11 @@ function CharacterTraitsColumn({ displayData, updateData }) {
                 </select>
             </div>
             <div className="traitsContainer">
-                {organizeTraits(displayData).map((trait) => (
+                {getChoiceTraits().map((trait) => (
                     <div key={trait.name}>
                         <div>
                             <h6>{trait.name}</h6>
-                            <input type="checkbox" value={JSON.stringify(trait)} checked={trait.favorite || false} onChange={addFavorite}/>
-                        </div>
-                        <div>
-                            <h5>{trait.level ? `Level ${trait.level}`:""} {capitalFirst(trait.source)} Trait</h5>
-                            <h5>
-                                {capitalFirst(trait.type)} {trait.resource && 
-                                    <span onClick={() => updateCharge(trait)}>( {trait.resource.curr_charges??0}/{displayData.get_stat(trait.resource.max_charges)} )</span>
-                                }
-                            </h5>
+                            <h5>{trait.level ? `Level ${trait.level}`:""}</h5>
                         </div>
                         <p>{trait.desc}</p>
                     </div>
@@ -115,4 +85,4 @@ function CharacterTraitsColumn({ displayData, updateData }) {
     )
 }
 
-export default CharacterTraitsColumn;
+export default EditTraitsColumn;

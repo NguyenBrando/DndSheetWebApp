@@ -1,6 +1,6 @@
 import { calcAbilityMod, calcProf, clamp } from "../utils/statCalculator";
 import { abilityScores, skills } from "../utils/statLists";
-import { traitFactory } from "./trait";
+import { BaseTrait, traitFactory } from "./trait";
 
 export const processCharacterData = (rawData) => {
     return new CharacterDisplayData(rawData)
@@ -15,22 +15,20 @@ class CharacterDisplayData {
         /* Verification */
         this.level = clamp(data.level ?? 1, 1, 20);
         this.proficiency = calcProf(data.level);
-        this.alignment = data.alignment; // verify
+        this.alignment = data.alignment;
 
         /* Set up stats */
-        this.stats = Object.fromEntries(abilityScores.map(ability => [ability, {value: clamp(data?.stats?.[ability] ?? 10, 1, 20), ops: []}]));
+        this.stats = Object.fromEntries(abilityScores.map(ability => [ability, {value: clamp(data?.stats?.[ability] ?? 10, 1, 20), ops: [], cap: 20}]));
         this.savingThrows = Object.fromEntries(abilityScores.map(ability => [ability, {prof: 0}]));
         this.skills = Object.fromEntries(Object.entries(skills).map(([skill,ability]) => [skill, {ability: ability, prof: 0}]));
+        this.proficiencies = {}
 
         /* Resources */
-        this.health = {rolls: data.health?.rolls, current: data.health?.current ?? 0, temp: data.health?.temp ?? 0}
+        this.hp = {rolls: data.hp?.rolls, current: data.hp?.current ?? 0, temp: data.hp?.temp ?? 0}
         this.hitDice = {current: data.hitDice ?? data.level, max: data.level}
         this.inspiration = data.inspiration;
         this.deathSaves = data.deathSaves;
         this.equipment = data.equipment;
-
-        /* Other */
-        this.languages = []
 
         /* Extract complex component data */
         this.traits = []
@@ -41,10 +39,9 @@ class CharacterDisplayData {
         /* Save data */
         this.sourceData = data
 
-        /* Apply static traits */
+        /* Apply initial traits */
         for (const trait of this.traits) 
-            if (trait.usage == "static")    
-                trait.apply(this);
+            trait.apply(this);
         
         /* Run final stat calculations */
         this.run_calculations();
@@ -60,7 +57,7 @@ class CharacterDisplayData {
         this.speed = race.speed;
         
         for (const [index,trait] of race.traits.entries()) {
-            this.traits.push(traitFactory({...trait, id: index, source: "race" }))
+            this.traits.push(new BaseTrait(index, "race", trait))
         }
     };
 
@@ -70,8 +67,8 @@ class CharacterDisplayData {
         
         this.background = background.name;
 
-        for (const trait of background.traits) {
-            this.traits.push(traitFactory({...trait, source: "class"}));
+        for (const [index,trait] of background.traits.entries()) {
+            this.traits.push(new BaseTrait(index, "background", trait));
         }
     };
 
@@ -82,8 +79,8 @@ class CharacterDisplayData {
         this.class = char_class.name;
         this.hitDice.type = char_class.hitDice;
 
-        for (const trait of char_class.traits) {
-            this.traits.push(traitFactory({...trait, source: "background"}))
+        for (const [index,trait] of char_class.traits.entries()) {
+            this.traits.push(new BaseTrait(index, "class", trait))
         }
     };
 
@@ -108,12 +105,32 @@ class CharacterDisplayData {
         this.initiative = this.stats.dexterity.mod
 
         /* HP */
-        const relavantHpRolls = this.health.rolls?.slice(0,this.level-1) ?? [];
-        this.health.max = (
+        const relavantHpRolls = Array.from(
+            {length: this.level - 1},
+            (_,i) => this.hp?.rolls?.[2+i] ?? 0
+        );
+
+        const rollsSum = (relavantHpRolls.reduce((accumulative, currVal) => accumulative + clamp(currVal,0,(this.hitDice?.type ?? 0)), 0))
+        
+        this.hp.max = (
             (this.hitDice?.type ?? 0) + 
-            (relavantHpRolls.reduce((accumulative, currVal) => accumulative + clamp(currVal,1,(this.hitDice?.type ?? 0)), 0)) + 
+            (rollsSum) + 
             (this.stats.constitution.mod * this.level)
         );
-        this.health.current = clamp(this.health.current, 0, this.health.max)
+
+        this.hp.ops = []
+        this.hp.ops.push(`Lvl 1 Hit Die: ${this.hitDice?.type ?? 0}`)
+        this.hp.ops.push(`Rolls Sum: +${rollsSum}`)
+        this.hp.ops.push(`Con Mod: +${this.stats.constitution.mod * this.level}`)
+
+        this.hp.current = clamp(this.hp.current ?? this.hp.max, 0, this.hp.max);
     }
+
+    get_stat(stat_id) {
+        if (typeof stat_id === "number") return stat_id;
+        switch (stat_id) {
+            case "@proficiency":
+                return this.profBonus;
+        }
+    };
 }
